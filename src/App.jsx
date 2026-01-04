@@ -24,6 +24,20 @@ import {
 } from 'lucide-react';
 import { getScripts, saveScript, deleteScript } from './storageUtils';
 
+// UUID generator that works in non-HTTPS environments
+const generateUUID = () => {
+  // Use crypto.randomUUID if available (HTTPS/localhost)
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Fallback for HTTP (non-secure contexts)
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 const THEMES = {
   studio: {
     id: 'studio',
@@ -182,7 +196,7 @@ const App = () => {
   const activeTab = tabs.find(t => t.id === activeTabId);
 
   const createNewTab = async (initialContent = '', initialName = '') => {
-    const newTabId = crypto.randomUUID();
+    const newTabId = generateUUID();
     const newTab = {
       id: newTabId,
       name: initialName || `Untitled Script ${tabs.length + 1}`,
