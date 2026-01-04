@@ -201,8 +201,8 @@ const App = () => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
-      createNewTab(event.target.result, file.name.replace('.txt', ''));
+    reader.onload = async (event) => {
+      await createNewTab(event.target.result, file.name.replace('.txt', ''));
     };
     reader.readAsText(file);
     e.target.value = ''; // Reset input
@@ -350,8 +350,8 @@ const App = () => {
                       key={status.id}
                       onClick={() => updateActiveTab({ status: status.id })}
                       className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-tighter transition-all flex items-center gap-1.5 ${activeTab.status === status.id
-                          ? `${status.color.replace('text-', 'bg-')}/20 ${status.color} ring-1 ring-white/10`
-                          : 'text-gray-600 hover:text-gray-400'
+                        ? `${status.color.replace('text-', 'bg-')}/20 ${status.color} ring-1 ring-white/10`
+                        : 'text-gray-600 hover:text-gray-400'
                         }`}
                     >
                       {status.icon}
