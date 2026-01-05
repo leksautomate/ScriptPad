@@ -173,7 +173,26 @@ const App = () => {
   const [theme, setTheme] = useState(THEMES.studio);
   const [isTeleprompterOpen, setIsTeleprompterOpen] = useState(false);
   const [wpm, setWpm] = useState(150);
+  const [selectionStats, setSelectionStats] = useState(null);
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Handle text selection in the editor
+  const handleTextSelection = () => {
+    if (textareaRef.current) {
+      const textarea = textareaRef.current;
+      const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+      if (selectedText.length > 0) {
+        const words = selectedText.trim().split(/\s+/).filter(w => w.length > 0).length;
+        const chars = selectedText.length;
+        const charsNoSpaces = selectedText.replace(/\s/g, '').length;
+        setSelectionStats({ words, chars, charsNoSpaces });
+      } else {
+        setSelectionStats(null);
+      }
+    }
+  };
 
   // Load scripts on mount
   useEffect(() => {
@@ -426,12 +445,36 @@ const App = () => {
               </div>
 
               <textarea
+                ref={textareaRef}
                 value={activeTab.content}
                 onChange={(e) => updateActiveTab({ content: e.target.value })}
+                onSelect={handleTextSelection}
+                onMouseUp={handleTextSelection}
+                onKeyUp={handleTextSelection}
                 placeholder="Start typing your script here..."
                 className={`flex-1 bg-transparent border-none focus:ring-0 p-8 md:p-12 text-lg md:text-2xl ${theme.input} font-mono resize-none scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent`}
                 spellCheck="false"
               />
+
+              {/* Selection Stats Tooltip */}
+              {selectionStats && (
+                <div className={`absolute bottom-20 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg ${theme.sidebar} border ${theme.border} shadow-2xl backdrop-blur-sm flex items-center gap-4 text-xs font-bold uppercase tracking-widest animate-fade-in z-10`}>
+                  <div className="flex items-center gap-2">
+                    <span className={theme.accentText}>{selectionStats.words}</span>
+                    <span className={theme.muted}>words</span>
+                  </div>
+                  <div className={`w-px h-4 ${theme.border}`} />
+                  <div className="flex items-center gap-2">
+                    <span className={theme.accentText}>{selectionStats.chars}</span>
+                    <span className={theme.muted}>chars</span>
+                  </div>
+                  <div className={`w-px h-4 ${theme.border}`} />
+                  <div className="flex items-center gap-2">
+                    <span className={theme.accentText}>{selectionStats.charsNoSpaces}</span>
+                    <span className={theme.muted}>no spaces</span>
+                  </div>
+                </div>
+              )}
 
               <footer className={`px-8 py-4 ${theme.sidebar} border-t ${theme.border} flex items-center justify-between text-[10px] ${theme.muted} font-mono uppercase tracking-widest font-bold`}>
                 <div className="flex gap-6">
