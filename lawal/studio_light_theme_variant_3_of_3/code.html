@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Studio Light - Script Workspace</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d7ff2",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .vibrant-gradient {
+            background: linear-gradient(135deg, #0d7ff2 0%, #a855f7 100%);
+        }
+        .soft-mesh {
+            background-color: #f5f7f8;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(25,100%,90%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(270,100%,90%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(200,100%,90%,1) 0, transparent 50%), 
+                radial-gradient(at 0% 100%, hsla(320,100%,90%,1) 0, transparent 50%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display overflow-hidden h-screen soft-mesh">
+<!-- Top Navigation Bar (Glassmorphic) -->
+<header class="fixed top-0 left-0 right-0 z-50 glass-panel h-16 flex items-center justify-between px-6 mx-4 mt-4 rounded-xl shadow-sm">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="vibrant-gradient p-1.5 rounded-lg shadow-md">
+<svg class="size-5 text-white" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-[#0d141c] text-lg font-bold tracking-tight">Studio Light</h2>
+</div>
+<div class="hidden md:flex items-center gap-6 text-[#0d141c]/70 text-sm font-medium">
+<a class="hover:text-primary transition-colors" href="#">My Scripts</a>
+<a class="hover:text-primary transition-colors" href="#">Templates</a>
+<a class="hover:text-primary transition-colors" href="#">Collaborations</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-64 pl-10 pr-4 py-2 rounded-xl bg-white/50 border-none focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-slate-400" placeholder="Search projects..."/>
+</div>
+<div class="flex items-center gap-2">
+<button class="vibrant-gradient text-white px-5 py-2 rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+                    Share
+                </button>
+<button class="glass-panel p-2 rounded-xl hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-slate-700">settings</span>
+</button>
+<div class="size-9 rounded-full bg-cover bg-center border-2 border-white shadow-sm" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHoo6V-WuR9_IcJmDkEOTN3yIgDJKg4rpBhCBl26rE7M4CUYyjvOWtw3rKPKJLyR7q8lyOLvCNyTXYz5_fcydeUhaA1WXMTsqONEzgiS7cR85J8qz7y_0UnyqBaB47vzjAFI9NkqILVOGaLUknwZYQC5LFuvixTiGjYFS-m06oP93uIZA2NywasGuv45ra_mupd38FGh1bMSDElf67t9WuSe07ShdzTWT_SIMxkiqkKYIc3N_GLefEEK4wVwY3ID-xxdyV7kk4U2Yu");'></div>
+</div>
+</div>
+</header>
+<div class="flex h-full pt-24 pb-4 px-4 gap-4 overflow-hidden">
+<!-- Sidebar Navigation (Glass) -->
+<aside class="w-64 glass-panel rounded-xl flex flex-col p-6 hidden lg:flex">
+<div class="mb-8">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Workspace</h3>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/60 text-primary shadow-sm border border-white/50">
+<span class="material-symbols-outlined">folder_open</span>
+<p class="text-sm font-semibold">Active Projects</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-sm font-medium">Global Library</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">image</span>
+<p class="text-sm font-medium">Assets</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-white/40 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+<p class="text-sm font-medium">Archive</p>
+</div>
+</div>
+</div>
+<div class="mb-8 overflow-y-auto flex-1">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Recent</h3>
+<div class="space-y-3">
+<div class="flex flex-col p-3 rounded-lg bg-white/30 border border-white/40 hover:bg-white/50 cursor-pointer transition-colors">
+<span class="text-xs font-bold text-orange-500 mb-1">VLOG</span>
+<p class="text-sm font-medium text-slate-800 truncate">Summer Roadtrip 2024</p>
+</div>
+<div class="flex flex-col p-3 rounded-lg bg-white/30 border border-white/40 hover:bg-white/50 cursor-pointer transition-colors">
+<span class="text-xs font-bold text-purple-500 mb-1">STORY</span>
+<p class="text-sm font-medium text-slate-800 truncate">Neon Dreams Part II</p>
+</div>
+</div>
+</div>
+<button class="vibrant-gradient text-white flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                New Script
+            </button>
+</aside>
+<!-- Main Editor Area -->
+<main class="flex-1 flex flex-col items-center overflow-y-auto no-scrollbar pb-10">
+<!-- Breadcrumbs & Toolbar Header -->
+<div class="w-full max-w-[850px] mb-6">
+<div class="flex items-center justify-between px-2 mb-2">
+<div class="flex items-center gap-2 text-sm text-slate-500 font-medium">
+<a class="hover:text-primary transition-colors" href="#">Projects</a>
+<span class="text-slate-300">/</span>
+<span class="text-slate-800 font-bold">Summer Vlog Script</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Autosaved</span>
+</div>
+</div>
+<!-- Floating Format Bar -->
+<div class="glass-panel p-2 rounded-xl flex items-center justify-between shadow-lg">
+<div class="flex items-center border-r border-white/30 pr-2 mr-2">
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700"><span class="material-symbols-outlined">format_bold</span></button>
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700"><span class="material-symbols-outlined">format_italic</span></button>
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+</div>
+<div class="flex items-center border-r border-white/30 pr-2 mr-2">
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700 flex items-center gap-1">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-bold">CHAR</span>
+</button>
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700 flex items-center gap-1">
+<span class="material-symbols-outlined">location_on</span>
+<span class="text-xs font-bold">SCENE</span>
+</button>
+<button class="p-2 hover:bg-white/60 rounded-lg text-slate-700 flex items-center gap-1">
+<span class="material-symbols-outlined">schedule</span>
+<span class="text-xs font-bold">TIME</span>
+</button>
+</div>
+<button class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-bold text-xs">
+<span class="material-symbols-outlined text-sm">open_in_full</span>
+                        FOCUS MODE
+                    </button>
+</div>
+</div>
+<!-- The Script Paper -->
+<div class="w-full max-w-[850px] bg-white rounded-lg shadow-2xl shadow-slate-200/50 min-h-[1000px] p-16 md:p-24 flex flex-col border border-white">
+<h1 class="text-4xl font-bold text-center text-slate-900 mb-16 tracking-tight">SUMMER VLOG SCRIPT</h1>
+<div class="space-y-12">
+<section>
+<p class="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 pb-2 mb-6">EXT. COASTAL HIGHWAY - DAY</p>
+<p class="text-lg leading-relaxed text-slate-800 mb-8">
+                            A classic vintage convertible cruises down the winding road. The ocean glimmers on the left, reflecting a harsh but beautiful midday sun.
+                        </p>
+<div class="flex flex-col items-center px-12 space-y-2">
+<p class="text-sm font-bold text-slate-500 uppercase">LEO</p>
+<p class="text-lg text-center text-slate-800 leading-normal">
+                                (shouting over the wind) <br/>
+                                "We’re finally here! Can you smell the salt air?"
+                            </p>
+</div>
+</section>
+<section>
+<p class="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100 pb-2 mb-6">INT. CAR - CONTINUOUS</p>
+<p class="text-lg leading-relaxed text-slate-800 mb-8">
+                            SARAH adjusts her sunglasses and looks into the GoPro mounted on the dashboard. She smiles, leaning back into the leather seat.
+                        </p>
+<div class="flex flex-col items-center px-12 space-y-2">
+<p class="text-sm font-bold text-slate-500 uppercase">SARAH</p>
+<p class="text-lg text-center text-slate-800 leading-normal">
+                                "The vlog is going to love this view. Let's make sure we hit the lookout point before the sun goes down."
+                            </p>
+</div>
+</section>
+</div>
+<!-- Cursor Indicator -->
+<div class="h-8 w-1 bg-primary animate-pulse mt-4"></div>
+</div>
+</main>
+<!-- Side Utility Panel (Glass) -->
+<aside class="w-80 glass-panel rounded-xl flex flex-col p-6 hidden xl:flex">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Workflow Status</h3>
+<div class="bg-white/40 border border-white/60 rounded-xl p-4 mb-6">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-slate-600">PRODUCTION STAGE</span>
+<span class="text-xs font-bold text-primary">65%</span>
+</div>
+<div class="w-full h-2 bg-white/50 rounded-full overflow-hidden mb-4">
+<div class="h-full bg-primary" style="width: 65%"></div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 rounded bg-green-100 text-green-600 text-[10px] font-bold">OUTLINE</span>
+<span class="px-2 py-1 rounded bg-blue-100 text-blue-600 text-[10px] font-bold">DRAFTING</span>
+<span class="px-2 py-1 rounded bg-slate-100 text-slate-400 text-[10px] font-bold">POLISH</span>
+</div>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Script Notes</h3>
+<button class="text-primary"><span class="material-symbols-outlined text-lg">add</span></button>
+</div>
+<div class="space-y-3">
+<div class="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+<p class="text-xs font-bold text-yellow-700 mb-1">SCENE 4 REMINDER</p>
+<p class="text-[11px] text-yellow-800 leading-snug">Check if we need licensing for the background music during the car sequence.</p>
+</div>
+<div class="p-3 bg-white/30 rounded-lg border border-white/50">
+<p class="text-xs font-bold text-slate-600 mb-1">CHARACTER ARC</p>
+<p class="text-[11px] text-slate-700 leading-snug">Ensure Leo's excitement feels authentic to his previous vlog persona.</p>
+</div>
+</div>
+</div>
+<div class="mt-auto border-t border-white/40 pt-6">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Themes</h3>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg bg-white/80 border border-primary shadow-sm">
+<div class="size-6 rounded-full soft-mesh"></div>
+<span class="text-[10px] font-bold text-primary">Studio Light</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-2 rounded-lg bg-white/30 border border-white/30 hover:bg-white/50">
+<div class="size-6 rounded-full bg-slate-800"></div>
+<span class="text-[10px] font-bold text-slate-600">Modern Dark</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+</body></html>
