@@ -686,7 +686,7 @@ const App = () => {
             <div className="flex flex-col h-full overflow-hidden">
               <div className="flex-1 overflow-y-auto p-4 lg:p-8 relative">
                 {activeTab ? (
-                  <div className={`mx-auto flex flex-col gap-6 ${isFocusMode ? 'max-w-3xl' : 'max-w-2xl'}`}>
+                  <div className={`mx-auto w-full flex flex-col gap-6 ${isFocusMode ? 'max-w-7xl' : 'max-w-5xl'}`}>
                     <div className="space-y-2 shrink-0">
                       <input
                         className={`w-full bg-transparent border-none text-3xl font-bold ${theme.text} focus:ring-0 p-0 placeholder-slate-700 outline-none`}
