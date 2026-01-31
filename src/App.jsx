@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { jsPDF } from 'jspdf';
 import {
   Plus,
   X,
@@ -11,16 +12,9 @@ import {
   Zap,
   Download,
   Upload,
-  Play,
-  Pause,
-  Maximize2,
-  Minimize2,
-  ChevronUp,
-  ChevronDown,
   Activity,
   CheckCircle2,
-  Circle,
-  Send
+  Circle
 } from 'lucide-react';
 import { getScripts, saveScript, deleteScript } from './storageUtils';
 
@@ -103,67 +97,7 @@ const STATUS_OPTIONS = [
   { id: 'Posted', color: 'text-green-400', icon: <CheckCircle2 size={14} /> }
 ];
 
-const Teleprompter = ({ content, onClose, theme }) => {
-  const [speed, setSpeed] = useState(2);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const scrollRef = useRef(null);
-  const animationRef = useRef(null);
 
-  useEffect(() => {
-    if (isPlaying) {
-      const scroll = () => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollTop += speed / 2;
-        }
-        animationRef.current = requestAnimationFrame(scroll);
-      };
-      animationRef.current = requestAnimationFrame(scroll);
-    } else {
-      cancelAnimationFrame(animationRef.current);
-    }
-    return () => cancelAnimationFrame(animationRef.current);
-  }, [isPlaying, speed]);
-
-  return (
-    <div className={`fixed inset-0 z-50 flex flex-col ${theme.bg} ${theme.text}`}>
-      <div className={`flex items-center justify-between p-6 border-b ${theme.border}`}>
-        <div className="flex items-center gap-6">
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg">
-            <Minimize2 size={24} />
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-sm opacity-50 uppercase tracking-widest">Speed: {speed}</span>
-            <button onClick={() => setSpeed(s => Math.max(1, s - 1))} className="p-1 hover:bg-white/10 rounded"><ChevronDown size={18} /></button>
-            <button onClick={() => setSpeed(s => Math.min(10, s + 1))} className="p-1 hover:bg-white/10 rounded"><ChevronUp size={18} /></button>
-          </div>
-        </div>
-        <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          className={`px-8 py-3 rounded-full font-bold flex items-center gap-2 ${isPlaying ? 'bg-orange-500' : theme.accent} text-white shadow-xl transition-all active:scale-95`}
-        >
-          {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-          {isPlaying ? 'PAUSE' : 'START SCROLLING'}
-        </button>
-        <div className="w-24" />
-      </div>
-
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto px-[10%] py-20 text-center leading-relaxed"
-        style={{ scrollBehavior: 'smooth' }}
-      >
-        <div className="text-4xl md:text-6xl font-bold whitespace-pre-wrap max-w-4xl mx-auto">
-          {content || "No content to display. Add some script text first!"}
-        </div>
-        <div className="h-[80vh]" />
-      </div>
-
-      <div className="fixed top-1/2 left-0 right-0 h-2 bg-red-500/20 pointer-events-none transform -translate-y-1/2">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 font-bold uppercase text-xs">Read Here</div>
-      </div>
-    </div>
-  );
-};
 
 const App = () => {
   const [tabs, setTabs] = useState([]);
@@ -171,8 +105,8 @@ const App = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [theme, setTheme] = useState(THEMES.studio);
-  const [isTeleprompterOpen, setIsTeleprompterOpen] = useState(false);
   const [wpm, setWpm] = useState(150);
+  const [viewMode, setViewMode] = useState('script'); // 'script' or 'description'
   const [selectionStats, setSelectionStats] = useState(null);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -276,7 +210,9 @@ const App = () => {
     return { mins, secs, totalSeconds, words };
   };
 
-  const stats = getReadTime(activeTab?.content || "");
+
+
+  const stats = getReadTime(viewMode === 'script' ? (activeTab?.content || "") : (activeTab?.description || ""));
 
   const exportToTxt = () => {
     if (!activeTab) return;
@@ -289,11 +225,47 @@ const App = () => {
     URL.revokeObjectURL(url);
   };
 
+  const exportToPDF = () => {
+    if (!activeTab) return;
+
+    // Create new PDF document
+    const doc = new jsPDF();
+
+    // Set font
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+
+    // Title
+    doc.text(activeTab.name, 20, 20);
+
+    // Meta info
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Status: ${activeTab.status} | Words: ${stats.words} | Read Time: ${stats.mins}m ${stats.secs}s`, 20, 30);
+
+    // Content
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+
+    const splitText = doc.splitTextToSize(activeTab.content, 170);
+    let y = 45;
+
+    // Add text page by page
+    splitText.forEach(line => {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(line, 20, y);
+      y += 7;
+    });
+
+    doc.save(`${activeTab.name.replace(/\s+/g, '_')}.pdf`);
+  };
+
   return (
     <div className={`flex h-screen w-full ${theme.bg} ${theme.text} font-sans overflow-hidden transition-colors duration-500`}>
-      {isTeleprompterOpen && activeTab && (
-        <Teleprompter content={activeTab.content} theme={theme} onClose={() => setIsTeleprompterOpen(false)} />
-      )}
 
       {/* Hidden file input */}
       <input
@@ -376,6 +348,22 @@ const App = () => {
                   className={`bg-transparent border-none focus:ring-0 text-lg font-bold outline-none w-full max-w-xs md:max-w-sm ${theme.id === 'light' ? 'text-gray-900' : 'text-white'}`}
                 />
 
+                {/* View Mode Toggle */}
+                <div className={`hidden sm:flex items-center p-1 rounded-lg border ${theme.border} bg-black/20`}>
+                  <button
+                    onClick={() => setViewMode('script')}
+                    className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'script' ? `${theme.accent} text-white shadow-lg` : 'text-gray-500 hover:text-gray-300'}`}
+                  >
+                    Script
+                  </button>
+                  <button
+                    onClick={() => setViewMode('description')}
+                    className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'description' ? `${theme.accent} text-white shadow-lg` : 'text-gray-500 hover:text-gray-300'}`}
+                  >
+                    Desc
+                  </button>
+                </div>
+
                 {/* Workflow Status Dropdown */}
                 <div className="hidden sm:flex items-center gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
                   {STATUS_OPTIONS.map((status) => (
@@ -401,8 +389,8 @@ const App = () => {
           <div className="flex items-center gap-2 sm:gap-4 shrink-0 ml-4">
             {activeTab && (
               <>
-                <button onClick={() => setIsTeleprompterOpen(true)} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all hover:bg-white/10 border ${theme.border}`}>
-                  <Maximize2 size={14} /> <span className="hidden sm:inline">Prompter</span>
+                <button onClick={exportToPDF} className={`p-2 rounded-lg hover:bg-white/10 transition-all ${theme.muted}`} title="Export to PDF">
+                  <span className="font-bold text-xs">PDF</span>
                 </button>
                 <button onClick={exportToTxt} className={`p-2 rounded-lg hover:bg-white/10 transition-all ${theme.muted}`} title="Download .txt">
                   <Download size={18} />
@@ -419,7 +407,7 @@ const App = () => {
         <main className="flex-1 relative flex flex-col p-4 md:p-6">
           {activeTab ? (
             <div className={`flex-1 flex flex-col ${theme.editorBg} rounded-3xl border ${theme.border} shadow-2xl overflow-hidden`}>
-              <div className={`flex items-center justify-between px-6 py-4 ${theme.sidebar} border-b ${theme.border}`}>
+              <div className={`flex items-center justify-between px-6 py-4 ${theme.sidebar} border-b ${theme.border} shrink-0`}>
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
@@ -444,17 +432,27 @@ const App = () => {
                 </div>
               </div>
 
-              <textarea
-                ref={textareaRef}
-                value={activeTab.content}
-                onChange={(e) => updateActiveTab({ content: e.target.value })}
-                onSelect={handleTextSelection}
-                onMouseUp={handleTextSelection}
-                onKeyUp={handleTextSelection}
-                placeholder="Start typing your script here..."
-                className={`flex-1 bg-transparent border-none focus:ring-0 p-8 md:p-12 text-lg md:text-2xl ${theme.input} font-mono resize-none scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent`}
-                spellCheck="false"
-              />
+              {viewMode === 'script' ? (
+                <textarea
+                  ref={textareaRef}
+                  value={activeTab.content}
+                  onChange={(e) => updateActiveTab({ content: e.target.value })}
+                  onSelect={handleTextSelection}
+                  onMouseUp={handleTextSelection}
+                  onKeyUp={handleTextSelection}
+                  placeholder="Start typing your script here..."
+                  className={`flex-1 bg-transparent border-none focus:ring-0 p-8 md:p-12 text-lg md:text-2xl ${theme.input} font-mono resize-none scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent`}
+                  spellCheck="false"
+                />
+              ) : (
+                <textarea
+                  value={activeTab.description || ''}
+                  onChange={(e) => updateActiveTab({ description: e.target.value })}
+                  placeholder="In this video, we'll cover... #Hashtags #Links"
+                  className={`flex-1 bg-transparent border-none focus:ring-0 p-8 md:p-12 text-base md:text-lg ${theme.input} font-sans resize-none scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent opacity-90`}
+                  spellCheck="true"
+                />
+              )}
 
               {/* Selection Stats Tooltip */}
               {selectionStats && (
@@ -476,7 +474,7 @@ const App = () => {
                 </div>
               )}
 
-              <footer className={`px-8 py-4 ${theme.sidebar} border-t ${theme.border} flex items-center justify-between text-[10px] ${theme.muted} font-mono uppercase tracking-widest font-bold`}>
+              <footer className={`px-8 py-4 ${theme.sidebar} border-t ${theme.border} flex items-center justify-between text-[10px] ${theme.muted} font-mono uppercase tracking-widest font-bold shrink-0`}>
                 <div className="flex gap-6">
                   <span>Pace: {wpm} WPM</span>
                   <div className="flex bg-black/20 rounded p-0.5">
@@ -506,10 +504,11 @@ const App = () => {
                 </button>
               </div>
             </div>
-          )}
-        </main>
-      </div>
-    </div>
+          )
+          }
+        </main >
+      </div >
+    </div >
   );
 };
 

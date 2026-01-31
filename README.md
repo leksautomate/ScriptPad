@@ -1,6 +1,6 @@
 # ✍️ ScriptPad
 
-A modern script writing and teleprompter application for content creators. Write your scripts, organize them, and use the built-in teleprompter to deliver them flawlessly.
+A modern script writing application for content creators. Write your scripts, organize them, and export them for your workflow.
 
 ![ScriptPad Screenshot](https://raw.githubusercontent.com/leksautomate/ScriptPad/main/screenshot.png)
 
@@ -11,7 +11,7 @@ A modern script writing and teleprompter application for content creators. Write
 | Feature | Description |
 |---------|-------------|
 | 📝 **Multi-Script Editor** | Create and manage multiple scripts in tabs |
-| 📺 **Teleprompter Mode** | Full-screen scrolling view with adjustable speed |
+| 📄 **Description Editor** | Dedicated space for YouTube video descriptions |
 | 🎨 **4 Themes** | Studio Dark, Studio Blue, Hacker Pro, Light Mode |
 | 💾 **Auto-Save** | Scripts save automatically to LocalStorage |
 | 📊 **Word Count & Read Time** | Estimates based on your speaking pace (WPM) |
@@ -48,7 +48,25 @@ Output will be in the `dist/` folder.
 
 ---
 
-## 🖥️ Deploy to VPS
+## � Usage
+
+### Writing Scripts
+- Use the main editor to write your video script.
+- **Word Count & Read Time** stats update automatically as you type.
+- **Themes** can be toggled to match your environment (Dark/Light/Hacker).
+
+### YouTube Description Editor
+- Toggle the **[ Script | Desc ]** button in the header to switch views.
+- Use the **Desc** view to draft your video summary, hashtags, links, and SEO tags.
+- This content is saved alongside your script, keeping everything in one place.
+
+### Exporting
+- **Export to .txt**: Downloads your script as a plain text file.
+- **Export to PDF**: Creates a formatted PDF including your script and metadata.
+
+---
+
+## �🖥️ Deploy to VPS
 
 One-command deployment to your own server:
 
